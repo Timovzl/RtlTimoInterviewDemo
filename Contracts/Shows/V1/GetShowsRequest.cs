@@ -8,7 +8,7 @@ namespace RtlTimo.InterviewDemo.Contracts.Shows.V1;
 /// Beyond the final page, result sets are simply empty.
 /// </para>
 /// <para>
-/// The effect of data additions modifications in-between the obtaining of pages is undefined.
+/// The effect of data modifications occurring between page retrievals is undefined.
 /// </para>
 /// </summary>
 public class GetShowsRequest
