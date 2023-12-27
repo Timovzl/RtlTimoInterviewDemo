@@ -15,11 +15,6 @@ public enum ErrorCode
 {
 	// DO NOT DELETE OR RENAME ITEMS
 
-	ExternalId_ValueNull,
-	ExternalId_ValueEmpty,
-	ExternalId_ValueToolong,
-	ExternalId_ValueInvalid,
-
 	ProperName_ValueNull,
 	ProperName_ValueTooShort,
 	ProperName_ValueTooLong,

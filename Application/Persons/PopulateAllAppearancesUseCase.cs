@@ -30,19 +30,15 @@ public sealed class PopulateAllAppearancesUseCase(
 		{
 			await using var showEnumerator = showRepo.Enumerate().WithCancellation(cancellationToken).GetAsyncEnumerator();
 
-			// Allow a separate DbContext to take over while we enumerate
-			await dbContextProvider.ExecuteInDbContextScopeAsync(AmbientScopeOption.ForceCreateNew, cancellationToken, async (executionScope, cancellationToken) =>
+			while (await showEnumerator.MoveNextAsync())
 			{
-				while (await showEnumerator.MoveNextAsync())
-				{
-					var showBatch = new List<Show>(capacity: 100) { showEnumerator.Current };
-					while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
-						showBatch.Add(showEnumerator.Current);
+				var showBatch = new List<Show>(capacity: 100) { showEnumerator.Current };
+				while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
+					showBatch.Add(showEnumerator.Current);
 
-					// Populate corresponding persons and appearances
-					await this.PopulatePersonsAndAppearances(knownPersonIds, showBatch, cancellationToken);
-				}
-			});
+				// Populate corresponding persons and appearances
+				await this.PopulatePersonsAndAppearances(knownPersonIds, showBatch, cancellationToken);
+			}
 		});
 	}
 
@@ -78,7 +74,6 @@ public sealed class PopulateAllAppearancesUseCase(
 	{
 		var newPersons = new List<Person>(capacity: 256);
 		var appearances = new HashSet<Appearance>(capacity: 256);
-		var cumulativeAppearanceCount = 0;
 
 		// Per show, get the appearances and yet-unseen persons
 		foreach (var show in shows)
@@ -95,16 +90,14 @@ public sealed class PopulateAllAppearancesUseCase(
 		}
 
 		// Store the appearances and newly discovered persons
-		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
+		await dbContextProvider.ExecuteInDbContextScopeAsync(AmbientScopeOption.ForceCreateNew, cancellationToken, async (executionScope, cancellationToken) =>
 		{
 			executionScope.DbContext.AddRange(newPersons);
 			executionScope.DbContext.AddRange(appearances);
 			await executionScope.DbContext.SaveChangesAsync(cancellationToken);
 		});
 
-		cumulativeAppearanceCount += appearances.Count;
-
 		logger.LogInformation("Imported {Count} persons ({CumulativeCount} cumulative)", newPersons.Count, knownPersonIds.Count);
-		logger.LogInformation("Imported {Count} appearances ({CumulativeCount} cumulative)", appearances.Count, cumulativeAppearanceCount);
+		logger.LogInformation("Imported {Count} appearances", appearances.Count);
 	}
 }

@@ -20,7 +20,9 @@ public sealed partial class ProperName : IComparable<ProperName>
 			throw new ValidationException(ErrorCode.ProperName_ValueTooShort, $"A {nameof(ProperName)} must not be empty.");
 		if (this.Value.Length > MaxLength)
 			throw new ValidationException(ErrorCode.ProperName_ValueTooLong, $"A {nameof(ProperName)} must not be over {MaxLength} characters long.");
-		if (ContainsNonPrintableCharacters(this.Value, flagNewLinesAndTabs: true))
-			throw new ValidationException(ErrorCode.ProperName_ValueInvalid, $"A {nameof(ProperName)} must contain only printable characters.");
+
+		// TODO: Something is funky about the data set! Who puts control characters in names? Investigate.
+		//if (ContainsNonPrintableCharacters(this.Value, flagNewLinesAndTabs: true))
+		//	throw new ValidationException(ErrorCode.ProperName_ValueInvalid, $"A {nameof(ProperName)} must contain only printable characters.");
 	}
 }

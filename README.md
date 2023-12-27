@@ -1,8 +1,5 @@
 # InterviewDemo
 
-#TODO: Test with more data!
-#TODO: Use stable package versions only.
-
 This bounded context is a demo for Timo's interview at RTL.
 It collects and exposes information in the domain of TV productions.
 
@@ -13,9 +10,8 @@ Dependencies:
 - SQL Server LocalDB: Should be started automatically when accessed.
 
 To get started with the Swagger API, simply clone and run.
-To allow the API to provide actual results, start the JobRunner once and run its PopulateInitialAppearancesJob.
-The job prioritizes information that can be obtained from a cache, to provide as much data as quickly as possible.
-For testing purposes, feel free to interrupt the job to work with an incomplete data set.
+Next, to allow the API to provide actual results, start the JobRunner once and run its PopulateInitialAppearancesJob.
+For testing purposes, feel free to interrupt the job to play with an incomplete data set.
 
 Database migrations are performed on startup in a concurrency-safe way.
 If so desired, this mechanism could easily be swapped out for something like migrations run from a pipeline.
@@ -32,14 +28,6 @@ Periodic jobs efficiently pull incremental updates.
 
 The architecture takes the form of a DDD bounded context, adhering to both Clean Architecture and Hexagonal Architecture (ports & adapters).
 
-## Repositories
-
-Although some like to use Entity Framework (EF) directly from application services, EF does not provide a full repository pattern.
-A clean repository pattern has functional interfaces with reusable methods.
-It abstracts away the "how" (e.g. a complex EF LINQ query) from the "what", which application services should focus on.
-
-The [Architect.EntityFramework.DbContextManagement](https://github.com/TheArchitectDev/Architect.EntityFramework.DbContextManagement) package makes it easy to manage DbContext lifespans across use cases and repositories, while facilitating resilience and concurrency protection at the same time.
-
 ## Scalability
 
 - The API can scale _out_ without issue.
@@ -54,6 +42,20 @@ All required infra resources are available with an impressive number of nines at
 Even transient failures should rarely be felt, thanks to EF's `EnableRetryOnFailure` and the use of execution strategies: failures to reach the database lead to opaque retries with gradual backoff.
 
 Concurrency conflicts are detected optimistically, with similar opaque retries to resolve them.
+
+## Contracts
+
+The contracts optimize for flexibility: additions to any output are free, and optional additions to any input are free.
+To support breaking changes, the contracts are versioned per functional area.
+A breaking change requires only a new version of that area.
+
+## Repositories
+
+Although some like to use Entity Framework (EF) directly from application services, EF does not provide a full repository pattern.
+A clean repository pattern has functional interfaces with reusable methods.
+It abstracts away the "how" (e.g. a complex EF LINQ query) from the "what", which application services should focus on.
+
+The [Architect.EntityFramework.DbContextManagement](https://github.com/TheArchitectDev/Architect.EntityFramework.DbContextManagement) package makes it easy to manage DbContext lifespans across use cases and repositories, while facilitating resilience and concurrency protection at the same time.
 
 ## Testing
 
@@ -80,4 +82,4 @@ Here is a general outline of the intent:
 
 - Authentication/authorization, rate limiting, and/or a Web Application Firewall (WAF) have been left out-of-scope.
 - Paging based on a page index is brittle. Data changes may cause items to be skipped or repeated when a caller is between pages. When there is more time, the API could be redesigned to circumvent this issue.
-- Rate limiting when consuming the TvMaze API could be made smarter and application-wide, especially once multiple jobs _might_ touch it at the same time.
+- Rate limiting when consuming the TvMaze API could be made smarter and application-wide, which is relevant once multiple jobs _might_ touch it at the same time.
