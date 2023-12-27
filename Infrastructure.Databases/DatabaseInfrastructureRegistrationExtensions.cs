@@ -8,7 +8,7 @@ public static class DatabaseInfrastructureRegistrationExtensions
 {
 	public static IServiceCollection AddDatabaseInfrastructureLayer(this IServiceCollection services, IConfiguration config)
 	{
-		services.AddDbContextPool<CoreDbContext>(dbContext => dbContext
+		services.AddPooledDbContextFactory<CoreDbContext>(dbContext => dbContext
 			.UseSqlServer(config.GetConnectionString("CoreDatabase")!, sqlServer => sqlServer.EnableRetryOnFailure()));
 
 		// Register the current project's dependencies

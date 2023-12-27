@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using RtlTimo.InterviewDemo.Application;
+using RtlTimo.InterviewDemo.Domain.Persons;
+using RtlTimo.InterviewDemo.Domain.Productions;
 
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases;
 
@@ -29,6 +31,9 @@ public sealed class CoreDbContext(
 	/// Our default collation, used for textual columns that do not specify one.
 	/// </summary>
 	public const string DefaultCollation = BinaryCollation;
+
+	public DbSet<Show> Shows { get; private init; }
+	public DbSet<Person> Persons { get; private init; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

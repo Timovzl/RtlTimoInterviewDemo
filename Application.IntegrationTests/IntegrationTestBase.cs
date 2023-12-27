@@ -4,18 +4,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Architect.EntityFramework.DbContextManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Moq;
 using RtlTimo.InterviewDemo.Infrastructure.Databases;
-using RtlTimo.InterviewDemo.Infrastructure.Databases.Interceptors;
 
 namespace RtlTimo.InterviewDemo.Application.IntegrationTests;
 
@@ -29,7 +24,7 @@ public abstract class IntegrationTestBase : IDisposable
 	/// </summary>
 	protected static string TimeZoneUtcOffsetString { get; } = $"+{TimeZoneInfo.Local.GetUtcOffset(DateTime.UnixEpoch):hh\\:mm}";
 	protected static JsonSerializerOptions JsonSerializerOptions { get; } = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new JsonStringEnumConverter() } };
-	
+
 	/// <summary>
 	/// A fixed timestamp on January 1 in the future, matching <see cref="FixedTime"/>, but without sub-millisecond components.
 	/// The nonzero time components help test edge cases, such as rounding or truncation by the database.
@@ -115,25 +110,6 @@ public abstract class IntegrationTestBase : IDisposable
 		this.ConfigureServices(services => services
 			.AddApplicationControllers()
 			.AddApplicationPart(typeof(Api.Program).Assembly));
-
-		// We normally throw when events are orphaned when saving changes
-		// We want to avoid doing so for events produced during test arrangements
-		// As such, we disable the responsible interceptor until the very last moment, i.e. when any use case is resolved from the container
-		this.ConfigureServices(services =>
-		{
-			var interceptorDescriptor = services.Single(descriptor => descriptor.ImplementationInstance is OrphanedDomainObjectInterceptor);
-			((OrphanedDomainObjectInterceptor)interceptorDescriptor.ImplementationInstance!).Disable(); // Disable the interceptor initially
-
-			foreach (var descriptor in services.Where(descriptor => descriptor.ServiceType.Name.EndsWith("UseCase")).ToList())
-			{
-				services.Remove(descriptor);
-				services.Add(new ServiceDescriptor(descriptor.ServiceType, serviceProvider =>
-				{
-					((OrphanedDomainObjectInterceptor)interceptorDescriptor.ImplementationInstance!).Enable(); // Enable the interceptor now that the use case is being resolved
-					return ActivatorUtilities.CreateInstance(serviceProvider, descriptor.ImplementationType!);
-				}, descriptor.Lifetime));
-			}
-		});
 	}
 
 	public virtual void Dispose()
@@ -265,8 +241,8 @@ public abstract class IntegrationTestBase : IDisposable
 			command.ExecuteNonQuery();
 		}
 
-		using var dbContextScope = this.Host.Services.GetRequiredService<IDbContextProvider<CoreDbContext>>().CreateDbContextScope();
-		dbContextScope.DbContext.Database.EnsureCreated();
+		var dbContext = this.Host.Services.GetRequiredService<CoreDbContext>();
+		dbContext.Database.EnsureCreated();
 	}
 
 	/// <summary>

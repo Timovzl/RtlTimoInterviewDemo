@@ -1,6 +1,6 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="Architect.DomainModeling" Version="3.0.1" />
+    <PackageVersion Include="Architect.DomainModeling" Version="3.0.2-preview-20231227.2" />
     <PackageVersion Include="Architect.Identities" Version="2.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="Hangfire" Version="1.8.6" />

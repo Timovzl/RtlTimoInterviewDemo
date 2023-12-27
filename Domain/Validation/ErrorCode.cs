@@ -20,5 +20,13 @@ public enum ErrorCode
 	ExternalId_ValueToolong,
 	ExternalId_ValueInvalid,
 
+	ProperName_ValueNull,
+	ProperName_ValueTooShort,
+	ProperName_ValueTooLong,
+	ProperName_ValueInvalid,
+
+	Show_SourceIdNull,
+	Show_NameNull,
+
 	// DO NOT DELETE OR RENAME ITEMS
 }
