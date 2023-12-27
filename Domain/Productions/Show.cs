@@ -10,6 +10,7 @@ public sealed class Show : Entity<ShowId, long>
 
 	public ProperName Name { get; }
 
+	// #TODO: Remove
 	public DateOnly? PremierDate { get; }
 	public DateOnly EndDate { get; }
 

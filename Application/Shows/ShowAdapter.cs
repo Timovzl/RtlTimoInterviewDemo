@@ -19,7 +19,7 @@ public sealed class ShowAdapter
 	public IReadOnlyList<CastMemberContract> ToContracts(IEnumerable<Person> persons)
 	{
 		var result = persons
-			.OrderBy(person => person.DateOfBirth)
+			.OrderByDescending(person => person.DateOfBirth)
 			.Select(person => new CastMemberContract(
 				id: (uint)person.Id,
 				name: person.Name,

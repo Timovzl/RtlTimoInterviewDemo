@@ -5,7 +5,7 @@ namespace RtlTimo.InterviewDemo.Contracts.Shows.V1;
 /// </summary>
 public class ShowContract
 {
-	public ulong Id { get; set; }
+	public uint Id { get; set; }
 	public string Name { get; set; } = null!;
 	public IReadOnlyList<CastMemberContract> Cast { get; set; } = null!;
 
@@ -13,7 +13,7 @@ public class ShowContract
 	{
 	}
 
-	internal ShowContract(ulong id, string name, IReadOnlyList<CastMemberContract> cast)
+	internal ShowContract(uint id, string name, IReadOnlyList<CastMemberContract> cast)
 	{
 		this.Id = id;
 		this.Name = name;

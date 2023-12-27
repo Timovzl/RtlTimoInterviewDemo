@@ -5,7 +5,7 @@ namespace RtlTimo.InterviewDemo.Contracts.Shows.V1;
 /// </summary>
 public class CastMemberContract
 {
-	public ulong Id { get; set; }
+	public uint Id { get; set; }
 	public string Name { get; set; } = null!;
 	public DateOnly? Birthday { get; set; }
 
@@ -13,7 +13,7 @@ public class CastMemberContract
 	{
 	}
 
-	internal CastMemberContract(ulong id, string name, DateOnly? birthday)
+	internal CastMemberContract(uint id, string name, DateOnly? birthday)
 	{
 		this.Id = id;
 		this.Name = name ?? throw new ArgumentNullException(nameof(name));

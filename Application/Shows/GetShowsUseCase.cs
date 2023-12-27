@@ -14,7 +14,7 @@ public sealed class GetShowsUseCase(
 	ShowAdapter showAdapter)
 	: IApplicationService
 {
-	private const ushort PageSize = 1000;
+	public ushort PageSize { get; set; }
 
 	public Task<GetShowsResponse> GetShows(GetShowsRequest request, CancellationToken cancellationToken)
 	{
@@ -22,7 +22,7 @@ public sealed class GetShowsUseCase(
 		{
 			var pageIndex = request?.PageIndex ?? 0;
 
-			var shows = await showRepo.ListPaged(pageSize: PageSize, pageIndex: pageIndex, cancellationToken);
+			var shows = await showRepo.ListPaged(pageSize: this.PageSize, pageIndex: pageIndex, cancellationToken);
 			var personsAppearingInShows = await personRepo.ListAppearingInAny(shows.Select(show => show.Id), cancellationToken);
 
 			var results = showAdapter.ToContracts(shows, personsAppearingInShows);

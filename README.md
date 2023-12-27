@@ -47,6 +47,7 @@ TODO (also multiple jobs, same table)
 
 Integration tests cover uses cases, with actual database interaction and in-memory HTTP server interaction, where applicable.
 This provides great coverage at minimal effort.
+Such tests run in isolation, each creating and deleting their own schema on the fly.
 
 Unit tests cover additional details.
 
@@ -60,3 +61,4 @@ TODO
 
 - Authentication/authorization, rate limiting, and/or a Web Application Firewall (WAF) have been left out-of-scope.
 - Paging based on a page index is brittle. Data changes may cause items to be skipped or repeated when a caller is between pages. When there is more time, the API could be redesigned to circumvent this issue.
+- Rate limiting in consuming the TvMaze API could be made smarter and application-wide, especially once multiple jobs _might_ touch it at the same time.

@@ -24,7 +24,7 @@ internal sealed class TvMazeShowSource(
 
 	public async IAsyncEnumerable<Show> EnumerateAllShows([EnumeratorCancellation] CancellationToken cancellationToken)
 	{
-		var nextPageNumber = 1; // 1-based
+		var nextPageNumber = 0; // 0-based
 		var expectsMoreData = true;
 
 		while (expectsMoreData)
@@ -59,7 +59,7 @@ internal sealed class TvMazeShowSource(
 				throw;
 			}
 
-			expectsMoreData = showDtos.Length >= 50; // Loop until exhausted, without trickling, without hardcoding against a particular batch size
+			expectsMoreData = showDtos.Length > 0; // Loop until exhausted, without hardcoding against a particular batch size
 			nextPageNumber++;
 
 			foreach (var showDto in showDtos)

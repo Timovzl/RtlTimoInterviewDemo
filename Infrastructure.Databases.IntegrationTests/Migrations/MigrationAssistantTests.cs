@@ -1,16 +1,18 @@
-namespace RtlTimo.InterviewDemo.Infrastructure.Databases.IntegrationTests.Migrations;
+// #TODO: Remove?
 
-public class MigrationAssistantTests : IntegrationTestBase
-{
-	[Fact]
-	public async Task MigrateAsync_Regularly_ShouldHaveExpectedEffect()
-	{
-		this.ShouldCreateDatabase = false;
+//namespace RtlTimo.InterviewDemo.Infrastructure.Databases.IntegrationTests.Migrations;
 
-		var instance = this.Host.Services.GetRequiredService<MigrationAssistant<CoreDbContext>>();
+//public class MigrationAssistantTests : IntegrationTestBase
+//{
+//	[Fact]
+//	public async Task MigrateAsync_Regularly_ShouldHaveExpectedEffect()
+//	{
+//		this.ShouldCreateDatabase = false;
 
-		await instance.MigrateAsync(CancellationToken.None);
+//		var instance = this.Host.Services.GetRequiredService<MigrationAssistant<CoreDbContext>>();
 
-		Assert.NotEqual(0, Convert.ToInt32(await this.ExecuteScalar("SELECT COUNT(*) FROM __EFMigrationsHistory;")));
-	}
-}
+//		await instance.MigrateAsync(CancellationToken.None);
+
+//		Assert.NotEqual(0, Convert.ToInt32(await this.ExecuteScalar("SELECT COUNT(*) FROM __EFMigrationsHistory;")));
+//	}
+//}

@@ -4,12 +4,14 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Architect.EntityFramework.DbContextManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using RtlTimo.InterviewDemo.Infrastructure.Apis;
 using RtlTimo.InterviewDemo.Infrastructure.Databases;
 
 namespace RtlTimo.InterviewDemo.Application.IntegrationTests;
@@ -98,6 +100,7 @@ public abstract class IntegrationTestBase : IDisposable
 		this.ConfigureServices(services => existingHostedServices = services.Where(descriptor => descriptor.ServiceType == typeof(IHostedService)).ToHashSet());
 
 		this.ConfigureServices(services => services.AddApplicationLayer(this.Configuration));
+		this.ConfigureServices(services => services.AddApiInfrastructureLayer(this.Configuration));
 		this.ConfigureServices(services => services.AddDatabaseInfrastructureLayer(this.Configuration));
 
 		// Remove custom hosted services, to avoid running startup/background logic
@@ -222,6 +225,11 @@ public abstract class IntegrationTestBase : IDisposable
 		var result = JsonSerializer.Deserialize<TResponse>(responseJson, JsonSerializerOptions);
 
 		return result;
+	}
+
+	private protected DbContextScope<CoreDbContext> CreateDbContextScope()
+	{
+		return (DbContextScope<CoreDbContext>)this.Host.Services.GetRequiredService<IDbContextProvider<CoreDbContext>>().CreateDbContextScope();
 	}
 
 	/// <summary>

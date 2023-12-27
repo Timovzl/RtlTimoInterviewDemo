@@ -1,4 +1,3 @@
-// #TODO: Keep or remove?
 using System.Linq.Expressions;
 using Moq;
 using Moq.Protected;
