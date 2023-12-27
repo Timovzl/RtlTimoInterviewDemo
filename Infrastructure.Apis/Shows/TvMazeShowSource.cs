@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
@@ -40,14 +41,14 @@ internal sealed class TvMazeShowSource(
 				showDtos = await httpClient.GetFromJsonAsync<TvMazeShowDto[]>($"{this._baseUrl}/{this._pagedShowRoute}?page={nextPageNumber}", cancellationToken) ??
 					throw new InvalidDataException("The API returned an unexpected null result.");
 			}
-			catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+			catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.TooManyRequests)
 			{
 				logger.LogTrace("Delaying due to rate limiting in TvMaze");
 				await Task.Delay(this._rateLimitingDelay, cancellationToken);
 				expectsMoreData = true;
 				continue; // Retry
 			}
-			catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+			catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.NotFound)
 			{
 				logger.LogTrace("Finished getting all shows from TvMaze");
 				expectsMoreData = false;
@@ -85,7 +86,7 @@ internal sealed class TvMazeShowSource(
 				castingDtos = await httpClient.GetFromJsonAsync<TvMazeCastingDto[]>($"{this._baseUrl}/{this._showRoute}/{showId}/{this._castSubroute}", cancellationToken) ??
 					throw new InvalidDataException("The API returned an unexpected null result.");
 			}
-			catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+			catch (HttpRequestException e) when (e.StatusCode == HttpStatusCode.TooManyRequests)
 			{
 				logger.LogTrace("Delaying due to rate limiting in TvMaze");
 				await Task.Delay(this._rateLimitingDelay, cancellationToken);

@@ -65,7 +65,9 @@ Such tests run in isolation, each creating and deleting its own schema on the fl
 
 Unit tests cover additional details.
 
-All tests can be run both locally and in a pipeline.
+All tests can be run both locally and from a pipeline.
+
+Complex entities and value objects, whose constructors are prone to change, are constructed using the builder pattern in all test methods.
 
 ## Monitoring
 
