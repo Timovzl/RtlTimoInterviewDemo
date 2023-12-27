@@ -1,6 +1,7 @@
 using Architect.AmbientContexts;
 using Architect.DomainModeling;
 using Architect.EntityFramework.DbContextManagement;
+using Prometheus;
 using RtlTimo.InterviewDemo.Application.Shows;
 
 namespace RtlTimo.InterviewDemo.Application.Persons;
@@ -15,6 +16,9 @@ public sealed class PopulateAllAppearancesUseCase(
 	IShowRepo showRepo)
 	: IApplicationService
 {
+	public static readonly Counter ShowCount = Metrics.CreateCounter("ShowCount", "The number of shows in the system");
+	public static readonly Counter PersonCount = Metrics.CreateCounter("PersonCount", "The number of persons in the system");
+
 	public async Task PopulateAllAppearances(CancellationToken cancellationToken)
 	{
 		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
@@ -72,6 +76,8 @@ public sealed class PopulateAllAppearancesUseCase(
 
 			cumulativeCount += showBatch.Count;
 
+			ShowCount.IncTo(cumulativeCount);
+
 			logger.LogInformation("Imported {Count} shows ({CumulativeCount} cumulative)", showBatch.Count, cumulativeCount);
 		}
 	}
@@ -102,6 +108,8 @@ public sealed class PopulateAllAppearancesUseCase(
 			executionScope.DbContext.AddRange(appearances);
 			await executionScope.DbContext.SaveChangesAsync(cancellationToken);
 		});
+
+		PersonCount.IncTo(knownPersonIds.Count);
 
 		logger.LogInformation("Imported {Count} persons ({CumulativeCount} cumulative)", newPersons.Count, knownPersonIds.Count);
 		logger.LogInformation("Imported {Count} appearances", appearances.Count);

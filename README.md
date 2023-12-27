@@ -67,6 +67,12 @@ Unit tests cover additional details.
 
 All tests can be run both locally and in a pipeline.
 
+## Monitoring
+
+- The `/metrics` endpoint exposes a number of metrics.
+- Structured logging is available, currently aimed at the console but easily extended to the preferred sink.
+- Tracing can be added based on the preferred infrastructure.
+
 ## Pipelines
 
 For lack of time and information regarding RTL's infrastructure, the implementation of pipelines has been left out-of-scope.

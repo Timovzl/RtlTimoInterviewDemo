@@ -2,12 +2,18 @@ namespace RtlTimo.InterviewDemo.Domain.UnitTests.Shared;
 
 public sealed class ProperNameTests
 {
+	[Fact]
+	public void Construct_WithNullOrWhitespaceValue_ShouldThrow()
+	{
+		var exception = Assert.Throws<NullValidationException>(() => new ProperName(null!));
+		Assert.Equal("ProperName_ValueNull", exception.ErrorCode);
+	}
+
 	[Theory]
-	[InlineData(null)]
 	[InlineData("")]
 	[InlineData(" ")]
 	[InlineData("	")]
-	public void Construct_WithNullOrWhitespaceValue_ShouldThrow(string? value)
+	public void Construct_WithEmptyOrWhitespaceValue_ShouldThrow(string? value)
 	{
 		var exception = Assert.Throws<ValidationException>(() => new ProperName(value!));
 		Assert.Equal("ProperName_ValueTooShort", exception.ErrorCode);

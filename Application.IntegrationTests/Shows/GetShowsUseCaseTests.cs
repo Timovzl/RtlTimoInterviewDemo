@@ -84,20 +84,18 @@ public sealed class GetShowsUseCaseTests : IntegrationTestBase
 		// Assert
 
 		Assert.NotNull(resultAtTheEnd);
-		Assert.NotNull(resultAtTheEnd.Shows);
-		Assert.Empty(resultAtTheEnd.Shows);
+		Assert.Empty(resultAtTheEnd);
 
 		Assert.NotNull(resultInTheMiddle);
-		Assert.Equal(1, resultInTheMiddle.PageIndex);
-		Assert.NotNull(resultInTheMiddle.Shows);
-		Assert.Equal(2, resultInTheMiddle.Shows.Count);
+		Assert.NotNull(resultInTheMiddle);
+		Assert.Equal(2, resultInTheMiddle.Count);
 
-		var firstShow = resultInTheMiddle.Shows.First();
+		var firstShow = resultInTheMiddle.First();
 		Assert.Equal(show3.Id, firstShow.Id);
 		Assert.Equal(show3.Name, firstShow.Name);
 		Assert.Empty(firstShow.Cast);
 
-		var lastShow = resultInTheMiddle.Shows.Last();
+		var lastShow = resultInTheMiddle.Last();
 		Assert.Equal(show4.Id, lastShow.Id);
 		Assert.Equal(show4.Name, lastShow.Name);
 		Assert.Equal(3, lastShow.Cast.Count);

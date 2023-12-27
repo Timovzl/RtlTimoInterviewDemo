@@ -5,22 +5,14 @@ namespace RtlTimo.InterviewDemo.Contracts.Shows.V1;
 /// Response to a <see cref="GetShowsRequest"/>
 /// </para>
 /// </summary>
-public class GetShowsResponse
+public class GetShowsResponse : List<ShowContract> // Would have preferred to have the list as a member, and include metadata such as the page index, but let's follow the spec
 {
-	/// <summary>
-	/// The 0-based page index.
-	/// </summary>
-	public ushort PageIndex { get; set; }
-
-	public IReadOnlyCollection<ShowContract> Shows { get; set; } = null!;
-
 	public GetShowsResponse()
 	{
 	}
 
-	internal GetShowsResponse(ushort pageIndex, IReadOnlyCollection<ShowContract> shows)
+	internal GetShowsResponse(IReadOnlyCollection<ShowContract> shows)
 	{
-		this.PageIndex = pageIndex;
-		this.Shows = shows ?? throw new ArgumentNullException(nameof(shows));
+		this.AddRange(shows ?? throw new ArgumentNullException(nameof(shows)));
 	}
 }

@@ -1,5 +1,8 @@
 namespace RtlTimo.InterviewDemo.Domain.Productions;
 
+/// <summary>
+/// Stores <see cref="Show"/> objects.
+/// </summary>
 public interface IShowRepo
 {
 	Task<bool> Any(CancellationToken cancellationToken);
