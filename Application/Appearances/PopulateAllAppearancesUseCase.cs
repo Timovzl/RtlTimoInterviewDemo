@@ -30,15 +30,20 @@ public sealed class PopulateAllAppearancesUseCase(
 		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
 		{
 			await using var showEnumerator = showRepo.EnumerateReverseChronologically().WithCancellation(cancellationToken).GetAsyncEnumerator();
-			while (await showEnumerator.MoveNextAsync())
-			{
-				var showBatch = new List<Show>(capacity: 100) { showEnumerator.Current };
-				while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
-					showBatch.Add(showEnumerator.Current);
 
-				// Populate corresponding persons and appearances
-				await this.PopulatePersonsAndAppearances(knownPersonIdsBySourceId, showBatch, cancellationToken);
-			}
+			// Allow a separate DbContext to take over while we enumerate
+			await dbContextProvider.ExecuteInDbContextScopeAsync(AmbientScopeOption.ForceCreateNew, cancellationToken, async (executionScope, cancellationToken) =>
+			{
+				while (await showEnumerator.MoveNextAsync())
+				{
+					var showBatch = new List<Show>(capacity: 100) { showEnumerator.Current };
+					while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
+						showBatch.Add(showEnumerator.Current);
+
+					// Populate corresponding persons and appearances
+					await this.PopulatePersonsAndAppearances(knownPersonIdsBySourceId, showBatch, cancellationToken);
+				}
+			});
 		});
 	}
 
@@ -94,7 +99,7 @@ public sealed class PopulateAllAppearancesUseCase(
 		}
 
 		// Store the appearances and newly discovered persons
-		await dbContextProvider.ExecuteInDbContextScopeAsync(AmbientScopeOption.ForceCreateNew, cancellationToken, async (executionScope, cancellationToken) =>
+		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
 		{
 			executionScope.DbContext.AddRange(newPersons);
 			executionScope.DbContext.AddRange(appearances);
