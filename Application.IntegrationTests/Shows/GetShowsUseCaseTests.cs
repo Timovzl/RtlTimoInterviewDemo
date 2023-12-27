@@ -68,27 +68,36 @@ public sealed class GetShowsUseCaseTests : IntegrationTestBase
 
 		// Act
 
-		var request = new GetShowsRequest()
+		var requestBeyondTheEnd = new GetShowsRequest()
 		{
-			PageIndex = 1, // The second page
+			PageIndex = 3, // Beyond the last page
+		};
+		var requestInTheMiddle = new GetShowsRequest()
+		{
+			PageIndex = 1, // The middle page
 		};
 
 		// Go through the (in-memory) HTTP server
-		var result = await this.GetApiResponse<GetShowsRequest, GetShowsResponse>(HttpMethod.Get, "/Shows/V1/GetShows", request);
+		var resultAtTheEnd = await this.GetApiResponse<GetShowsRequest, GetShowsResponse>(HttpMethod.Get, "/Shows/V1/GetShows", requestBeyondTheEnd);
+		var resultInTheMiddle = await this.GetApiResponse<GetShowsRequest, GetShowsResponse>(HttpMethod.Get, "/Shows/V1/GetShows", requestInTheMiddle);
 
 		// Assert
 
-		Assert.NotNull(result);
-		Assert.Equal(1, result.PageIndex);
-		Assert.NotNull(result.Shows);
-		Assert.Equal(2, result.Shows.Count);
+		Assert.NotNull(resultAtTheEnd);
+		Assert.NotNull(resultAtTheEnd.Shows);
+		Assert.Empty(resultAtTheEnd.Shows);
 
-		var firstShow = result.Shows.First();
+		Assert.NotNull(resultInTheMiddle);
+		Assert.Equal(1, resultInTheMiddle.PageIndex);
+		Assert.NotNull(resultInTheMiddle.Shows);
+		Assert.Equal(2, resultInTheMiddle.Shows.Count);
+
+		var firstShow = resultInTheMiddle.Shows.First();
 		Assert.Equal(show3.Id, firstShow.Id);
 		Assert.Equal(show3.Name, firstShow.Name);
 		Assert.Empty(firstShow.Cast);
 
-		var lastShow = result.Shows.Last();
+		var lastShow = resultInTheMiddle.Shows.Last();
 		Assert.Equal(show4.Id, lastShow.Id);
 		Assert.Equal(show4.Name, lastShow.Name);
 		Assert.Equal(3, lastShow.Cast.Count);

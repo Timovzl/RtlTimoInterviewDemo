@@ -1,11 +1,11 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using RtlTimo.InterviewDemo.Application.Appearances;
+using RtlTimo.InterviewDemo.Application.Persons;
 using RtlTimo.InterviewDemo.Domain.Persons;
 using RtlTimo.InterviewDemo.Domain.Productions;
 using RtlTimo.InterviewDemo.Testing.Common.Http;
 
-namespace RtlTimo.InterviewDemo.Application.IntegrationTests.Appearances;
+namespace RtlTimo.InterviewDemo.Application.IntegrationTests.Persons;
 
 public sealed class PopulateAllAppearancesUseCaseTests : IntegrationTestBase
 {

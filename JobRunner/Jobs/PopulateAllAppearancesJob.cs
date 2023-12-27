@@ -1,4 +1,4 @@
-using RtlTimo.InterviewDemo.Application.Appearances;
+using RtlTimo.InterviewDemo.Application.Persons;
 
 namespace RtlTimo.InterviewDemo.JobRunner.Jobs;
 

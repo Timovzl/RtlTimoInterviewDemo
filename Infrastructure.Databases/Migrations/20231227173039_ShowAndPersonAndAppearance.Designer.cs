@@ -12,7 +12,7 @@ using RtlTimo.InterviewDemo.Infrastructure.Databases;
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20231227162344_ShowAndPersonAndAppearance")]
+    [Migration("20231227173039_ShowAndPersonAndAppearance")]
     partial class ShowAndPersonAndAppearance
     {
         /// <inheritdoc />
@@ -28,10 +28,10 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Persons.Appearance", b =>
                 {
-                    b.Property<uint>("PersonId")
+                    b.Property<long>("PersonId")
                         .HasColumnType("bigint");
 
-                    b.Property<uint>("ShowId")
+                    b.Property<long>("ShowId")
                         .HasColumnType("bigint");
 
                     b.HasKey("PersonId", "ShowId");
@@ -43,7 +43,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Persons.Person", b =>
                 {
-                    b.Property<uint>("Id")
+                    b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.Property<DateOnly?>("DateOfBirth")
@@ -74,11 +74,8 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Productions.Show", b =>
                 {
-                    b.Property<uint>("Id")
+                    b.Property<long>("Id")
                         .HasColumnType("bigint");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
 
                     b.Property<DateTime>("ModificationDateTime")
                         .HasPrecision(3)
@@ -90,9 +87,6 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                         .HasColumnType("nvarchar(255)")
                         .UseCollation("Latin1_General_100_CI_AS");
 
-                    b.Property<DateOnly?>("PremierDate")
-                        .HasColumnType("date");
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -102,8 +96,6 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ModificationDateTime");
-
-                    b.HasIndex("EndDate", "PremierDate");
 
                     b.ToTable("Shows");
                 });

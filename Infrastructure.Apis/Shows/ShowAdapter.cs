@@ -10,8 +10,6 @@ internal sealed class ShowAdapter
 		var result = new Show(
 			dto.Id,
 			new ProperName(dto.Name),
-			premierDate: dto.Premiered,
-			endDate: dto.Ended,
 			modificationDateTime: DateTime.UnixEpoch.AddSeconds(dto.Updated));
 
 		return result;

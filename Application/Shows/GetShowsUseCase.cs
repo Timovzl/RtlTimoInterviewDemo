@@ -14,7 +14,7 @@ public sealed class GetShowsUseCase(
 	ShowAdapter showAdapter)
 	: IApplicationService
 {
-	public ushort PageSize { get; set; }
+	public ushort PageSize { get; set; } = 1000;
 
 	public Task<GetShowsResponse> GetShows(GetShowsRequest request, CancellationToken cancellationToken)
 	{

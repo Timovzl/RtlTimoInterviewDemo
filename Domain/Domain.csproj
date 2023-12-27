@@ -20,7 +20,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Architect.DomainModeling" />
-		<PackageReference Include="Architect.Identities" />
 		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="prometheus-net.AspNetCore" />
 		<PackageReference Include="Scrutor" />

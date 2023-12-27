@@ -3,7 +3,7 @@ using Architect.DomainModeling;
 using Architect.EntityFramework.DbContextManagement;
 using RtlTimo.InterviewDemo.Application.Shows;
 
-namespace RtlTimo.InterviewDemo.Application.Appearances;
+namespace RtlTimo.InterviewDemo.Application.Persons;
 
 /// <summary>
 /// Intended to initially populate all <see cref="Appearance"/> data, along with corresponding <see cref="Show"/> and <see cref="Person"/> data.

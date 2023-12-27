@@ -1,4 +1,4 @@
-namespace RtlTimo.InterviewDemo.Application.IntegrationTests.Appearances;
+namespace RtlTimo.InterviewDemo.Application.IntegrationTests.Persons;
 
 internal sealed class ExampleCastData
 {

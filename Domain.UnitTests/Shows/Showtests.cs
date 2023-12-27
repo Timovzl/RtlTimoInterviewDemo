@@ -5,18 +5,18 @@ public sealed class ShowTests
 	[Fact]
 	public void Construct_WithNullSourceId_ShouldThrow()
 	{
-		// TODO: Implement. Many test method bodies have been omitted if a similar test already showcases the intended approach.
+		// TODO: Implement. Test method bodies have been omitted if a similar test already showcases the intended approach.
 	}
 
 	[Fact]
 	public void Construct_WithNullName_ShouldThrow()
 	{
-		// TODO: Implement. Many test method bodies have been omitted if a similar test already showcases the intended approach.
+		// TODO: Implement. Test method bodies have been omitted if a similar test already showcases the intended approach.
 	}
 
 	[Fact]
 	public void Construct_Regularly_ShouldProduceExpectedResult()
 	{
-		// TODO: Implement. Many test method bodies have been omitted if a similar test already showcases the intended approach.
+		// TODO: Implement. Test method bodies have been omitted if a similar test already showcases the intended approach.
 	}
 }

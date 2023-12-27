@@ -1,5 +1,6 @@
 # InterviewDemo
 
+#TODO: Test with more data!
 #TODO: Use stable package versions only.
 
 This bounded context is a demo for Timo's interview at RTL.
@@ -33,15 +34,26 @@ The architecture takes the form of a DDD bounded context, adhering to both Clean
 
 ## Repositories
 
-TODO
+Although some like to use Entity Framework (EF) directly from application services, EF does not provide a full repository pattern.
+A clean repository pattern has functional interfaces with reusable methods.
+It abstracts away the "how" (e.g. a complex EF LINQ query) from the "what", which application services should focus on.
+
+The [Architect.EntityFramework.DbContextManagement](https://github.com/TheArchitectDev/Architect.EntityFramework.DbContextManagement) package makes it easy to manage DbContext lifespans across use cases and repositories, while facilitating resilience and concurrency protection at the same time.
 
 ## Scalability
 
-TODO
+- The API can scale _out_ without issue.
+- The JobRunner can scale out, but should hardly need to. Large batches use async enumeration to avoid excessive RAM usage. Scaling out is possible because Hangfire's `DisableConcurrentExecution` provides limited concurrency protection, with EF's optimistic concurrency plus retry-on-failure providing a more thorough protection.
+- The database can scale _up_. The data set is more than sufficiently limited for this to suffice. The workload is read-heavy. Expected usage patterns will make good use of the database's cache.
 
 ## Resilience & Consistency
 
-TODO (also multiple jobs, same table)
+The bounded context is ready for high availability, thanks to health checks and the ability to scale out.
+All required infra resources are available with an impressive number of nines at reasonable prices (99.95% for Azure App Services, 99.995% for Azure SQL Database Premium).
+
+Even transient failures should rarely be felt, thanks to EF's `EnableRetryOnFailure` and the use of execution strategies: failures to reach the database lead to opaque retries with gradual backoff.
+
+Concurrency conflicts are detected optimistically, with similar opaque retries to resolve them.
 
 ## Testing
 
@@ -55,10 +67,17 @@ All tests can be run both locally and in a pipeline.
 
 ## Pipelines
 
-TODO
+For lack of time and information regarding RTL's infrastructure, the implementation of pipelines has been left out-of-scope.
+
+Here is a general outline of the intent:
+
+- Use Terraform to manage resources, with variables handling differences between environments.
+- Use yaml pipelines with Azure DevOps to deploy to Kubernetes via rolling deployments, adjusted carefully to the bounded context's needs.
+- Manage secrets with Azure Key Vault or a comparable offering. Ideally, these are loaded into the application on startup with the help of Managed Identities, to avoid the many security pitfalls of moving secrets through pipelines.
+- Run a verification pipeline when a PR is opened. Deploy to the various environments as early and automatically as can be afforded.
 
 ## Future Improvements
 
 - Authentication/authorization, rate limiting, and/or a Web Application Firewall (WAF) have been left out-of-scope.
 - Paging based on a page index is brittle. Data changes may cause items to be skipped or repeated when a caller is between pages. When there is more time, the API could be redesigned to circumvent this issue.
-- Rate limiting in consuming the TvMaze API could be made smarter and application-wide, especially once multiple jobs _might_ touch it at the same time.
+- Rate limiting when consuming the TvMaze API could be made smarter and application-wide, especially once multiple jobs _might_ touch it at the same time.

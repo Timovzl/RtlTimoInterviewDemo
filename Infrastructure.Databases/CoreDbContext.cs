@@ -45,9 +45,6 @@ public sealed class CoreDbContext(
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreDbContext).Assembly);
 
 		this.PluralizeTableNames(modelBuilder);
-
-		// #TODO: Keep or remove seed data?
-		Seeder.AddSeedData(modelBuilder);
 	}
 
 	protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -71,17 +68,13 @@ public sealed class CoreDbContext(
 			.HaveConversion<UtcDateTimeConverter>()
 			.HavePrecision(3);
 
-		// Configure default precision for decimals outside of properties (e.g. in CAST(), SUM(), AVG(), etc.)
+		// Configure a sensible default precision for decimals outside of properties (e.g. in CAST(), SUM(), AVG(), etc.)
 		configurationBuilder.DefaultTypeMapping<decimal>()
 			.HasPrecision(19, 9);
 
-		// Configure default precision for decimal properties
+		// Configure a sensible default precision for decimal properties
 		configurationBuilder.Properties<decimal>()
 			.HavePrecision(19, 9);
-
-		configurationBuilder.Properties<ExternalId>()
-			.HaveMaxLength(ExternalId.MaxLength)
-			.UseCollation(BinaryCollation);
 	}
 
 	/// <summary>
