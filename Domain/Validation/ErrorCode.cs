@@ -25,8 +25,9 @@ public enum ErrorCode
 	ProperName_ValueTooLong,
 	ProperName_ValueInvalid,
 
-	Show_SourceIdNull,
 	Show_NameNull,
+
+	Person_NameNull,
 
 	// DO NOT DELETE OR RENAME ITEMS
 }

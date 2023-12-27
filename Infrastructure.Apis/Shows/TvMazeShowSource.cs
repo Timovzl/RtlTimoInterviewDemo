@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using RtlTimo.InterviewDemo.Application.Shows;
 using RtlTimo.InterviewDemo.Domain.Persons;
 using RtlTimo.InterviewDemo.Domain.Productions;
-using RtlTimo.InterviewDemo.Domain.Shared;
 
 namespace RtlTimo.InterviewDemo.Infrastructure.Apis.Shows;
 
@@ -71,7 +70,7 @@ internal sealed class TvMazeShowSource(
 		}
 	}
 
-	public async Task<IReadOnlyCollection<Person>> GetCastForShow(ExternalId showId, CancellationToken cancellationToken)
+	public async Task<IReadOnlyCollection<Person>> GetCastForShow(ShowId showId, CancellationToken cancellationToken)
 	{
 		using var httpClient = httpClientFactory.CreateClient();
 

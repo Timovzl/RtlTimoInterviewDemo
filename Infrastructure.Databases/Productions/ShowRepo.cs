@@ -15,18 +15,17 @@ public sealed class ShowRepo(
 		return this.AggregateQueryable.AnyAsync(cancellationToken);
 	}
 
-	public IAsyncEnumerable<Show> EnumerateReverseChronologically()
+	public IAsyncEnumerable<Show> Enumerate()
 	{
 		return this.AggregateQueryable
-			.OrderByDescending(x => x.EndDate)
-			.OrderByDescending(x => x.PremierDate)
+			.OrderBy(x => x.Id)
 			.AsNoTracking().AsAsyncEnumerable();
 	}
 
 	public async Task<IReadOnlyList<Show>> ListPaged(int pageSize, ushort pageIndex, CancellationToken cancellationToken)
 	{
 		var result = await this.AggregateQueryable
-			.OrderByDescending(x => x.SourceId)
+			.OrderBy(x => x.Id) // Debatable, but in accordance with example given in requirements
 			.Skip(pageIndex * pageSize)
 			.Take(pageSize)
 			.ToListAsync(cancellationToken);

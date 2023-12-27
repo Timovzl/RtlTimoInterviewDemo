@@ -9,8 +9,6 @@ internal sealed class PersonMapping : IEntityTypeConfiguration<Person>
 	{
 		builder.Property(x => x.Id);
 
-		builder.Property(x => x.SourceId);
-
 		builder.Property(x => x.Name)
 			.HasMaxLength(ProperName.MaxLength)
 			.UseCollation(CoreDbContext.CulturalCollation);
@@ -24,8 +22,6 @@ internal sealed class PersonMapping : IEntityTypeConfiguration<Person>
 			.IsRowVersion();
 
 		builder.HasKey(x => x.Id);
-
-		builder.HasAlternateKey(x => x.SourceId);
 
 		builder.HasIndex(x => x.ModificationDateTime);
 	}

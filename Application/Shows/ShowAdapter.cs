@@ -8,7 +8,7 @@ public sealed class ShowAdapter
 	{
 		var result = shows
 			.Select(show => new ShowContract(
-				id: UInt16.Parse(show.SourceId),
+				id: (uint)show.Id,
 				name: show.Name,
 				cast: this.ToContracts(personsAppearingInShows[show.Id])))
 			.ToList();
@@ -21,7 +21,7 @@ public sealed class ShowAdapter
 		var result = persons
 			.OrderBy(person => person.DateOfBirth)
 			.Select(person => new CastMemberContract(
-				id: UInt16.Parse(person.SourceId),
+				id: (uint)person.Id,
 				name: person.Name,
 				birthday: person.DateOfBirth))
 			.ToList();

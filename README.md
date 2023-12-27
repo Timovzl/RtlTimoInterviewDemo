@@ -41,7 +41,7 @@ TODO
 
 ## Resilience & Consistency
 
-TODO
+TODO (also multiple jobs, same table)
 
 ## Testing
 
@@ -58,5 +58,5 @@ TODO
 
 ## Future Improvements
 
+- Authentication/authorization, rate limiting, and/or a Web Application Firewall (WAF) have been left out-of-scope.
 - Paging based on a page index is brittle. Data changes may cause items to be skipped or repeated when a caller is between pages. When there is more time, the API could be redesigned to circumvent this issue.
-- If multiple jobs will ever exist that populate the same table (such as Persons), concurrency protection will require additional care.

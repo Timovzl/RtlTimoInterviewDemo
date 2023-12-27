@@ -4,11 +4,9 @@ namespace RtlTimo.InterviewDemo.Domain.Persons;
 /// Any person involved in the domain, such as an actor or a crew member.
 /// </summary>
 [Entity]
-public sealed class Person : Entity<PersonId, Guid>
+public sealed class Person : Entity<PersonId, long>
 {
 	// ID is inherited
-
-	public ExternalId SourceId { get; }
 
 	public ProperName Name { get; }
 
@@ -20,14 +18,13 @@ public sealed class Person : Entity<PersonId, Guid>
 	public DateTime ModificationDateTime { get; }
 
 	public Person(
-		ExternalId sourceId,
+		PersonId id,
 		ProperName name,
 		DateOnly? dateOfBirth,
 		DateTime modificationDateTime)
-		: base(id: Guid.NewGuid())
+		: base(id)
 	{
-		this.SourceId = sourceId ?? throw new NullValidationException(ErrorCode.Show_SourceIdNull, nameof(sourceId));
-		this.Name = name ?? throw new NullValidationException(ErrorCode.Show_NameNull, nameof(name));
+		this.Name = name ?? throw new NullValidationException(ErrorCode.Person_NameNull, nameof(name));
 		this.DateOfBirth = dateOfBirth;
 		this.ModificationDateTime = modificationDateTime;
 	}

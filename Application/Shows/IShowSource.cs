@@ -1,7 +1,3 @@
-using RtlTimo.InterviewDemo.Domain.Persons;
-using RtlTimo.InterviewDemo.Domain.Productions;
-using RtlTimo.InterviewDemo.Domain.Shared;
-
 namespace RtlTimo.InterviewDemo.Application.Shows;
 
 /// <summary>
@@ -11,5 +7,5 @@ public interface IShowSource
 {
 	IAsyncEnumerable<Show> EnumerateAllShows(CancellationToken cancellationToken);
 
-	Task<IReadOnlyCollection<Person>> GetCastForShow(ExternalId showId, CancellationToken cancellationToken);
+	Task<IReadOnlyCollection<Person>> GetCastForShow(ShowId showId, CancellationToken cancellationToken);
 }

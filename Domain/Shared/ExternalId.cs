@@ -1,3 +1,4 @@
+// #TODO: Remove?
 namespace RtlTimo.InterviewDemo.Domain.Shared;
 
 /// <summary>

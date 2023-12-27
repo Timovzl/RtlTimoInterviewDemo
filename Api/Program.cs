@@ -33,13 +33,13 @@ public static class Program
 			{
 				Title = "InterviewDemo API",
 				Description = """
-				<p>This page documents the InterviewDemo API.</p>
+				<p>This page documents the InterviewDemo API for Timo's interview at RTL.</p>
 				""",
 			});
 
 			var apiDocumentationFilePath = Path.Combine(AppContext.BaseDirectory, $"{typeof(Program).Assembly.GetName().Name}.xml");
 			swagger.IncludeXmlComments(apiDocumentationFilePath);
-			var contractsDocumentationFilePath = Path.Combine(AppContext.BaseDirectory, $"{typeof(Contracts.Optional<object>).Assembly.GetName().Name}.xml");
+			var contractsDocumentationFilePath = Path.Combine(AppContext.BaseDirectory, $"{typeof(Contracts.Shows.V1.ShowContract).Assembly.GetName().Name}.xml");
 			swagger.IncludeXmlComments(contractsDocumentationFilePath);
 		});
 

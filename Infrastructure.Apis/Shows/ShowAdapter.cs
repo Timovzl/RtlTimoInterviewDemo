@@ -8,7 +8,7 @@ internal sealed class ShowAdapter
 	public Show FromDto(TvMazeShowDto dto)
 	{
 		var result = new Show(
-			new ExternalId(dto.Id.ToString()),
+			dto.Id,
 			new ProperName(dto.Name),
 			premierDate: dto.Premiered,
 			endDate: dto.Ended,

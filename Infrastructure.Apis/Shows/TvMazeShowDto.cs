@@ -2,7 +2,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Apis.Shows;
 
 internal sealed class TvMazeShowDto
 {
-	public ulong Id { get; set; }
+	public uint Id { get; set; }
 	public string Name { get; set; } = null!;
 	public DateOnly? Premiered { get; set; }
 	public DateOnly? Ended { get; set; }

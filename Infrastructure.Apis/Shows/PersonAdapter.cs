@@ -8,7 +8,7 @@ internal sealed class PersonAdapter
 	public Person FromDto(TvMazePersonDto dto)
 	{
 		var result = new Person(
-			new ExternalId(dto.Id.ToString()),
+			dto.Id,
 			new ProperName(dto.Name),
 			dateOfBirth: dto.Birthday,
 			modificationDateTime: DateTime.UnixEpoch.AddSeconds(dto.Updated));

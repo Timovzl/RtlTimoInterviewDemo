@@ -15,8 +15,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                 name: "Persons",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, collation: "Latin1_General_100_BIN2"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, collation: "Latin1_General_100_CI_AS"),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
                     ModificationDateTime = table.Column<DateTime>(type: "datetime2(3)", precision: 3, nullable: false),
@@ -25,15 +24,13 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.Id);
-                    table.UniqueConstraint("AK_Persons_SourceId", x => x.SourceId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Shows",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, collation: "Latin1_General_100_BIN2"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, collation: "Latin1_General_100_CI_AS"),
                     PremierDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
@@ -43,15 +40,14 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shows", x => x.Id);
-                    table.UniqueConstraint("AK_Shows_SourceId", x => x.SourceId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Appearances",
                 columns: table => new
                 {
-                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ShowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PersonId = table.Column<long>(type: "bigint", nullable: false),
+                    ShowId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {

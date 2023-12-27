@@ -12,7 +12,7 @@ using RtlTimo.InterviewDemo.Infrastructure.Databases;
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20231227145841_ShowAndPersonAndAppearance")]
+    [Migration("20231227162344_ShowAndPersonAndAppearance")]
     partial class ShowAndPersonAndAppearance
     {
         /// <inheritdoc />
@@ -28,11 +28,11 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Persons.Appearance", b =>
                 {
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<uint>("PersonId")
+                        .HasColumnType("bigint");
 
-                    b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<uint>("ShowId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("PersonId", "ShowId");
 
@@ -43,8 +43,8 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Persons.Person", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<uint>("Id")
+                        .HasColumnType("bigint");
 
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
@@ -65,15 +65,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<string>("SourceId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .UseCollation("Latin1_General_100_BIN2");
-
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("SourceId");
 
                     b.HasIndex("ModificationDateTime");
 
@@ -82,8 +74,8 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
             modelBuilder.Entity("RtlTimo.InterviewDemo.Domain.Productions.Show", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<uint>("Id")
+                        .HasColumnType("bigint");
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
@@ -107,15 +99,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<string>("SourceId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .UseCollation("Latin1_General_100_BIN2");
-
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("SourceId");
 
                     b.HasIndex("ModificationDateTime");
 

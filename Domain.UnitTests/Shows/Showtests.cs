@@ -1,6 +1,6 @@
 namespace RtlTimo.InterviewDemo.Domain.UnitTests.Shows;
 
-public sealed class Showtests
+public sealed class ShowTests
 {
 	[Fact]
 	public void Construct_WithNullSourceId_ShouldThrow()

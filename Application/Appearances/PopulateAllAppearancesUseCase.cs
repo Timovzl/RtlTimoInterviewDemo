@@ -2,7 +2,6 @@ using Architect.AmbientContexts;
 using Architect.DomainModeling;
 using Architect.EntityFramework.DbContextManagement;
 using RtlTimo.InterviewDemo.Application.Shows;
-using RtlTimo.InterviewDemo.Domain.Shared;
 
 namespace RtlTimo.InterviewDemo.Application.Appearances;
 
@@ -24,12 +23,12 @@ public sealed class PopulateAllAppearancesUseCase(
 		// Populate shows
 		await this.PopulateShows(cancellationToken);
 
-		var knownPersonIdsBySourceId = new Dictionary<ExternalId, PersonId>();
+		var knownPersonIds = new HashSet<PersonId>();
 
 		// Per batch of shows
 		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
 		{
-			await using var showEnumerator = showRepo.EnumerateReverseChronologically().WithCancellation(cancellationToken).GetAsyncEnumerator();
+			await using var showEnumerator = showRepo.Enumerate().WithCancellation(cancellationToken).GetAsyncEnumerator();
 
 			// Allow a separate DbContext to take over while we enumerate
 			await dbContextProvider.ExecuteInDbContextScopeAsync(AmbientScopeOption.ForceCreateNew, cancellationToken, async (executionScope, cancellationToken) =>
@@ -41,7 +40,7 @@ public sealed class PopulateAllAppearancesUseCase(
 						showBatch.Add(showEnumerator.Current);
 
 					// Populate corresponding persons and appearances
-					await this.PopulatePersonsAndAppearances(knownPersonIdsBySourceId, showBatch, cancellationToken);
+					await this.PopulatePersonsAndAppearances(knownPersonIds, showBatch, cancellationToken);
 				}
 			});
 		});
@@ -75,7 +74,7 @@ public sealed class PopulateAllAppearancesUseCase(
 		}
 	}
 
-	private async Task PopulatePersonsAndAppearances(Dictionary<ExternalId, PersonId> knownPersonIdByExternalId, IEnumerable<Show> shows, CancellationToken cancellationToken)
+	private async Task PopulatePersonsAndAppearances(HashSet<PersonId> knownPersonIds, IEnumerable<Show> shows, CancellationToken cancellationToken)
 	{
 		var newPersons = new List<Person>(capacity: 256);
 		var appearances = new HashSet<Appearance>(capacity: 256);
@@ -84,17 +83,14 @@ public sealed class PopulateAllAppearancesUseCase(
 		// Per show, get the appearances and yet-unseen persons
 		foreach (var show in shows)
 		{
-			var importedPersons = await showSource.GetCastForShow(show.SourceId, cancellationToken);
+			var persons = await showSource.GetCastForShow(show.Id, cancellationToken);
 
-			foreach (var importedPerson in importedPersons)
+			foreach (var person in persons)
 			{
-				if (!knownPersonIdByExternalId.TryGetValue(importedPerson.SourceId, out var personId))
-				{
-					knownPersonIdByExternalId[importedPerson.SourceId] = personId = importedPerson.Id;
-					newPersons.Add(importedPerson);
-				};
+				if (knownPersonIds.Add(person.Id))
+					newPersons.Add(person);
 
-				appearances.Add(new Appearance(personId, show.Id));
+				appearances.Add(new Appearance(person.Id, show.Id));
 			}
 		}
 
@@ -108,7 +104,7 @@ public sealed class PopulateAllAppearancesUseCase(
 
 		cumulativeAppearanceCount += appearances.Count;
 
-		logger.LogInformation("Imported {Count} persons ({CumulativeCount} cumulative)", newPersons.Count, knownPersonIdByExternalId.Count);
+		logger.LogInformation("Imported {Count} persons ({CumulativeCount} cumulative)", newPersons.Count, knownPersonIds.Count);
 		logger.LogInformation("Imported {Count} appearances ({CumulativeCount} cumulative)", appearances.Count, cumulativeAppearanceCount);
 	}
 }
