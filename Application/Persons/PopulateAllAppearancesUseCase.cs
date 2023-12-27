@@ -11,8 +11,8 @@ namespace RtlTimo.InterviewDemo.Application.Persons;
 /// </summary>
 public sealed class PopulateAllAppearancesUseCase(
 	ILogger<PopulateAllAppearancesUseCase> logger,
-	IDbContextProvider<ICoreDatabase> dbContextProvider,
 	IShowSource showSource,
+	IDbContextProvider<ICoreDatabase> dbContextProvider,
 	IShowRepo showRepo)
 	: IApplicationService
 {
@@ -21,11 +21,7 @@ public sealed class PopulateAllAppearancesUseCase(
 
 	public async Task PopulateAllAppearances(CancellationToken cancellationToken)
 	{
-		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
-		{
-			if (await showRepo.Any(cancellationToken))
-				throw new InvalidOperationException("To re-run the fast initial population, delete the database and restart the application.");
-		});
+		await this.ThrowIfDataSetNotEmpty(cancellationToken);
 
 		logger.LogInformation("First time populating all shows, persons, and appearances");
 		logger.LogInformation("Delete the database to be able to re-run this one-time process, as it merely exists to speed things up as compared to incremental updates");
@@ -33,15 +29,15 @@ public sealed class PopulateAllAppearancesUseCase(
 		// Populate shows
 		await this.PopulateShows(cancellationToken);
 
-		var knownPersonIds = new HashSet<PersonId>();
-
-		// Per batch of shows
 		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
 		{
+			var knownPersonIds = new HashSet<PersonId>();
+
 			await using var showEnumerator = showRepo.Enumerate().WithCancellation(cancellationToken).GetAsyncEnumerator();
 
 			while (await showEnumerator.MoveNextAsync())
 			{
+				// Per batch of shows
 				var showBatch = new List<Show>(capacity: 100) { showEnumerator.Current };
 				while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
 					showBatch.Add(showEnumerator.Current);
@@ -52,6 +48,15 @@ public sealed class PopulateAllAppearancesUseCase(
 		});
 	}
 
+	private async Task ThrowIfDataSetNotEmpty(CancellationToken cancellationToken)
+	{
+		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
+		{
+			if (await showRepo.Any(cancellationToken))
+				throw new InvalidOperationException("To re-run the fast initial population, delete the database and restart the application.");
+		});
+	}
+
 	/// <summary>
 	/// Populates all <see cref="Show"/> instances and returns the complete list of <see cref="Show.SourceId"/> values.
 	/// </summary>
@@ -59,15 +64,15 @@ public sealed class PopulateAllAppearancesUseCase(
 	{
 		var cumulativeCount = 0;
 
-		// Per batch of shows
 		await using var showEnumerator = showSource.EnumerateAllShows(cancellationToken).GetAsyncEnumerator(cancellationToken);
 		while (await showEnumerator.MoveNextAsync())
 		{
+			// Per batch of shows
 			var showBatch = new List<Show>(capacity: 1000) { showEnumerator.Current };
 			while (showBatch.Count < showBatch.Capacity && await showEnumerator.MoveNextAsync())
 				showBatch.Add(showEnumerator.Current);
 
-			// Store the batch of shows
+			// Store the batch
 			await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
 			{
 				executionScope.DbContext.AddRange(showBatch);
@@ -84,8 +89,8 @@ public sealed class PopulateAllAppearancesUseCase(
 
 	private async Task PopulatePersonsAndAppearances(HashSet<PersonId> knownPersonIds, IEnumerable<Show> shows, CancellationToken cancellationToken)
 	{
-		var newPersons = new List<Person>(capacity: 256);
-		var appearances = new HashSet<Appearance>(capacity: 256);
+		var newPersons = new List<Person>(capacity: 1024);
+		var appearances = new HashSet<Appearance>(capacity: 1024);
 
 		// Per show, get the appearances and yet-unseen persons
 		foreach (var show in shows)

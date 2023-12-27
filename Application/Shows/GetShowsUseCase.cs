@@ -9,10 +9,10 @@ namespace RtlTimo.InterviewDemo.Application.Shows;
 /// Returns all TV shows in a paginated fashion.
 /// </summary>
 public sealed class GetShowsUseCase(
+	ShowAdapter showAdapter,
 	IDbContextProvider<ICoreDatabase> dbContextProvider,
 	IShowRepo showRepo,
-	IPersonRepo personRepo,
-	ShowAdapter showAdapter)
+	IPersonRepo personRepo)
 	: IApplicationService
 {
 	public static readonly Counter RequestCount = Metrics.CreateCounter("GetShowsRequestCount", "The number of GetShows requests");
