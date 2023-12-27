@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases;
 
+// #TODO: Consider using scoped dbcontext
 /// <summary>
 /// <para>
 /// Helps perform migrations without concurrency conflicts.

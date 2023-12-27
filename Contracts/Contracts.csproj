@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Any 3.1+ target provides nullable annotations -->
-		<TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 		<AssemblyName>RtlTimo.InterviewDemo.Contracts</AssemblyName>
 		<RootNamespace>RtlTimo.InterviewDemo.Contracts</RootNamespace>
 		<Nullable>Enable</Nullable>

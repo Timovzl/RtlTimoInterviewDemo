@@ -25,6 +25,8 @@ internal sealed class PersonMapping : IEntityTypeConfiguration<Person>
 
 		builder.HasKey(x => x.Id);
 
+		builder.HasAlternateKey(x => x.SourceId);
+
 		builder.HasIndex(x => x.ModificationDateTime);
 	}
 }

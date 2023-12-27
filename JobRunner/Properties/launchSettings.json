@@ -6,7 +6,9 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:45642"
+			"applicationUrl": "https://localhost:11222",
+			"launchBrowser": true,
+			"launchUrl": "https://localhost:11222/jobs"
 		}
 	}
 }

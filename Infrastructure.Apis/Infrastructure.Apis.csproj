@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>RtlTimo.InterviewDemo.Infrastructure.Apis</AssemblyName>
+		<RootNamespace>RtlTimo.InterviewDemo.Infrastructure.Apis</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
+		<InternalsVisibleTo Include="RtlTimo.InterviewDemo.Application.IntegrationTests" />
+		<InternalsVisibleTo Include="RtlTimo.InterviewDemo.Application.UnitTests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Application\Application.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+</Project>

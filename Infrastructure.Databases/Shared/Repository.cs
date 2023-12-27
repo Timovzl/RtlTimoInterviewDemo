@@ -1,3 +1,5 @@
+using Architect.EntityFramework.DbContextManagement;
+
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Shared;
 
 /// <summary>
@@ -16,10 +18,15 @@ public abstract class Repository<TEntity>
 	/// </summary>
 	protected abstract IQueryable<TEntity> AggregateQueryable { get; }
 
-	protected CoreDbContext DbContext { get; }
+	/// <summary>
+	/// Retrieves and returns the current ambient DbContext, generally provided by use case, from the application layer.
+	/// </summary>
+	protected CoreDbContext DbContext => this.DbContextAccessor.CurrentDbContext;
 
-	protected Repository(CoreDbContext dbContext)
+	private IDbContextAccessor<CoreDbContext> DbContextAccessor { get; }
+
+	protected Repository(IDbContextAccessor<CoreDbContext> dbContextAccessor)
 	{
-		this.DbContext = dbContext;
+		this.DbContextAccessor = dbContextAccessor;
 	}
 }

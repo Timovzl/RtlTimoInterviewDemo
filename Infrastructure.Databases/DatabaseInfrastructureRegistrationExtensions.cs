@@ -1,6 +1,8 @@
+using Architect.EntityFramework.DbContextManagement;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RtlTimo.InterviewDemo.Application;
 
 namespace RtlTimo.InterviewDemo.Infrastructure.Databases;
 
@@ -10,6 +12,10 @@ public static class DatabaseInfrastructureRegistrationExtensions
 	{
 		services.AddPooledDbContextFactory<CoreDbContext>(dbContext => dbContext
 			.UseSqlServer(config.GetConnectionString("CoreDatabase")!, sqlServer => sqlServer.EnableRetryOnFailure()));
+
+		services.AddDbContextScope<ICoreDatabase, CoreDbContext>(scope => scope
+			.ExecutionStrategyOptions(ExecutionStrategyOptions.RetryOnOptimisticConcurrencyFailure)
+			.AvoidFailureOnCommitRetries(true));
 
 		// Register the current project's dependencies
 		services.Scan(scanner => scanner.FromAssemblies(typeof(DatabaseInfrastructureRegistrationExtensions).Assembly)

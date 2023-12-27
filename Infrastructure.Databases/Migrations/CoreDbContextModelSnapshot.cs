@@ -43,7 +43,7 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly>("DateOfBirth")
+                    b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
                     b.Property<DateTime>("ModificationDateTime")
@@ -70,6 +70,8 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("SourceId");
+
                     b.HasIndex("ModificationDateTime");
 
                     b.ToTable("Persons");
@@ -80,6 +82,9 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
                     b.Property<DateTime>("ModificationDateTime")
                         .HasPrecision(3)
                         .HasColumnType("datetime2(3)");
@@ -89,6 +94,9 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .UseCollation("Latin1_General_100_CI_AS");
+
+                    b.Property<DateOnly?>("PremierDate")
+                        .HasColumnType("date");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -104,7 +112,11 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("SourceId");
+
                     b.HasIndex("ModificationDateTime");
+
+                    b.HasIndex("EndDate", "PremierDate");
 
                     b.ToTable("Shows");
                 });

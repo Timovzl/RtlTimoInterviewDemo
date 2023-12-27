@@ -21,7 +21,7 @@ public static class ApplicationRegistrationExtensions
 		// Register the current project's dependencies
 		services.Scan(scanner => scanner.FromAssemblies(typeof(ApplicationRegistrationExtensions).Assembly)
 			.AddClasses(c => c.Where(type => type.Name.EndsWith("er") || type.Name.EndsWith("or") || type.Name.EndsWith("UseCase") || type.Name.EndsWith("Client")), publicOnly: false) // Services only
-			.AsSelfWithInterfaces().WithScopedLifetime());
+			.AsSelfWithInterfaces().WithSingletonLifetime());
 		
 		services.AddHttpContextAccessor();
 

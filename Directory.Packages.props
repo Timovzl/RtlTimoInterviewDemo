@@ -1,6 +1,7 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="Architect.DomainModeling" Version="3.0.2-preview-20231227.2" />
+    <PackageVersion Include="Architect.EntityFramework.DbContextManagement" Version="2.0.0" />
     <PackageVersion Include="Architect.Identities" Version="2.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="Hangfire" Version="1.8.6" />
@@ -10,6 +11,7 @@
     <PackageVersion Include="Joonasw.AspNetCore.SecurityHeaders" Version="5.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />

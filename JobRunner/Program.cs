@@ -1,10 +1,11 @@
-using RtlTimo.InterviewDemo.Application;
-using RtlTimo.InterviewDemo.Infrastructure.Databases;
-using RtlTimo.InterviewDemo.JobRunner.Filters;
-using RtlTimo.InterviewDemo.JobRunner.Jobs;
 using Hangfire;
 using Hangfire.Prometheus.NetCore;
 using Prometheus;
+using RtlTimo.InterviewDemo.Application;
+using RtlTimo.InterviewDemo.Infrastructure.Apis;
+using RtlTimo.InterviewDemo.Infrastructure.Databases;
+using RtlTimo.InterviewDemo.JobRunner.Filters;
+using Serilog;
 
 namespace RtlTimo.InterviewDemo.JobRunner;
 
@@ -14,7 +15,10 @@ public static class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
+		builder.Host.UseSerilog((context, logger) => logger.ReadFrom.Configuration(context.Configuration));
+
 		builder.Services.AddApplicationLayer(builder.Configuration);
+		builder.Services.AddApiInfrastructureLayer(builder.Configuration);
 		builder.Services.AddDatabaseInfrastructureLayer(builder.Configuration);
 		builder.Services.AddDatabaseMigrations();
 
@@ -33,9 +37,11 @@ public static class Program
 		builder.Services.AddHealthChecks();
 
 		var app = builder.Build();
-		
+
 		if (builder.Environment.IsDevelopment())
 			app.UseDeveloperExceptionPage();
+
+		app.UseHttpsRedirection();
 
 		app.UseRouting();
 

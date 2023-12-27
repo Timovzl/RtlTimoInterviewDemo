@@ -12,14 +12,17 @@ public sealed class Person : Entity<PersonId, Guid>
 
 	public ProperName Name { get; }
 
-	public DateOnly DateOfBirth { get; }
+	/// <summary>
+	/// Null if unknown.
+	/// </summary>
+	public DateOnly? DateOfBirth { get; }
 
 	public DateTime ModificationDateTime { get; }
 
 	public Person(
 		ExternalId sourceId,
 		ProperName name,
-		DateOnly dateOfBirth,
+		DateOnly? dateOfBirth,
 		DateTime modificationDateTime)
 		: base(id: Guid.NewGuid())
 	{

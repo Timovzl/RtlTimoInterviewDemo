@@ -31,6 +31,10 @@ Periodic jobs efficiently pull incremental updates.
 
 The architecture takes the form of a DDD bounded context, adhering to both Clean Architecture and Hexagonal Architecture (ports & adapters).
 
+## Repositories
+
+TODO
+
 ## Scalability
 
 TODO
@@ -47,3 +51,12 @@ This provides great coverage at minimal effort.
 Unit tests cover additional details.
 
 All tests can be run both locally and in a pipeline.
+
+## Pipelines
+
+TODO
+
+## Future Improvements
+
+- Paging based on a page index is brittle. Data changes may cause items to be skipped or repeated when a caller is between pages. When there is more time, the API could be redesigned to circumvent this issue.
+- If multiple jobs will ever exist that populate the same table (such as Persons), concurrency protection will require additional care.

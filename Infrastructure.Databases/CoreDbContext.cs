@@ -34,6 +34,7 @@ public sealed class CoreDbContext(
 
 	public DbSet<Show> Shows { get; private init; }
 	public DbSet<Person> Persons { get; private init; }
+	public DbSet<Appearance> Appearances { get; private init; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

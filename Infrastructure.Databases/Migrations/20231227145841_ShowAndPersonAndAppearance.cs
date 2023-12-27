@@ -18,13 +18,14 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SourceId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, collation: "Latin1_General_100_BIN2"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, collation: "Latin1_General_100_CI_AS"),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
                     ModificationDateTime = table.Column<DateTime>(type: "datetime2(3)", precision: 3, nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.UniqueConstraint("AK_Persons_SourceId", x => x.SourceId);
                 });
 
             migrationBuilder.CreateTable(
@@ -34,12 +35,15 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SourceId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, collation: "Latin1_General_100_BIN2"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, collation: "Latin1_General_100_CI_AS"),
+                    PremierDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ModificationDateTime = table.Column<DateTime>(type: "datetime2(3)", precision: 3, nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shows", x => x.Id);
+                    table.UniqueConstraint("AK_Shows_SourceId", x => x.SourceId);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,6 +79,11 @@ namespace RtlTimo.InterviewDemo.Infrastructure.Databases.Migrations
                 name: "IX_Persons_ModificationDateTime",
                 table: "Persons",
                 column: "ModificationDateTime");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shows_EndDate_PremierDate",
+                table: "Shows",
+                columns: new[] { "EndDate", "PremierDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shows_ModificationDateTime",

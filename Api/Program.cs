@@ -3,6 +3,8 @@ using RtlTimo.InterviewDemo.Application.ExceptionHandlers;
 using RtlTimo.InterviewDemo.Infrastructure.Databases;
 using Microsoft.OpenApi.Models;
 using Prometheus;
+using Serilog;
+using RtlTimo.InterviewDemo.Infrastructure.Apis;
 
 namespace RtlTimo.InterviewDemo.Api;
 
@@ -12,14 +14,12 @@ public static class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
+		builder.Host.UseSerilog((context, logger) => logger.ReadFrom.Configuration(context.Configuration));
+
 		builder.Services.AddApplicationLayer(builder.Configuration);
+		builder.Services.AddApiInfrastructureLayer(builder.Configuration);
 		builder.Services.AddDatabaseInfrastructureLayer(builder.Configuration);
 		builder.Services.AddDatabaseMigrations();
-
-		// Register the mock dependencies
-		builder.Services.Scan(scanner => scanner.FromAssemblies(typeof(Program).Assembly)
-			.AddClasses(c => c.Where(type => type.Name.StartsWith("Mock")))
-			.AsSelfWithInterfaces().WithSingletonLifetime());
 
 		builder.Services.AddApplicationControllers();
 
@@ -29,7 +29,7 @@ public static class Program
 			swagger.CustomSchemaIds(type => type.FullName!["RtlTimo.InterviewDemo.Contracts.".Length..]);
 
 			swagger.SupportNonNullableReferenceTypes();
-			swagger.SwaggerDoc("#ToDoname", new OpenApiInfo()
+			swagger.SwaggerDoc("v1", new OpenApiInfo()
 			{
 				Title = "InterviewDemo API",
 				Description = """
@@ -49,6 +49,8 @@ public static class Program
 		
 		if (builder.Environment.IsDevelopment())
 			app.UseDeveloperExceptionPage();
+
+		app.UseHttpsRedirection();
 
 		app.UseExceptionHandler(app => app.Run(async context =>
 			await context.RequestServices.GetRequiredService<RequestExceptionHandler>().HandleExceptionAsync()));

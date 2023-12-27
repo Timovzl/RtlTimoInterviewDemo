@@ -1,6 +1,6 @@
 using Hangfire;
 
-namespace RtlTimo.InterviewDemo.JobRunner.Jobs;
+namespace RtlTimo.InterviewDemo.JobRunner.Shared;
 
 public interface IJob
 {

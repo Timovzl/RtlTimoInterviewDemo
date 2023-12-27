@@ -1,6 +1,6 @@
 using Hangfire;
 
-namespace RtlTimo.InterviewDemo.JobRunner.Jobs;
+namespace RtlTimo.InterviewDemo.JobRunner.Shared;
 
 /// <summary>
 /// Do not inject this type directly. Instead, inject <see cref="IJob"/>.

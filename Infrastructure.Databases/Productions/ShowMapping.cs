@@ -15,6 +15,10 @@ internal sealed class ShowMapping : IEntityTypeConfiguration<Show>
 			.HasMaxLength(ProperName.MaxLength)
 			.UseCollation(CoreDbContext.CulturalCollation);
 
+		builder.Property(x => x.PremierDate);
+
+		builder.Property(x => x.EndDate);
+
 		builder.Property(x => x.ModificationDateTime);
 
 		builder.Property<byte[]>("RowVersion")
@@ -22,6 +26,10 @@ internal sealed class ShowMapping : IEntityTypeConfiguration<Show>
 			.IsRowVersion();
 
 		builder.HasKey(x => x.Id);
+
+		builder.HasAlternateKey(x => x.SourceId);
+
+		builder.HasIndex(nameof(Show.EndDate), nameof(Show.PremierDate));
 
 		builder.HasIndex(x => x.ModificationDateTime);
 	}
