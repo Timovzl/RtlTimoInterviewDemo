@@ -17,6 +17,12 @@ public sealed class PopulateAllAppearancesUseCase(
 {
 	public async Task PopulateAllAppearances(CancellationToken cancellationToken)
 	{
+		await dbContextProvider.ExecuteInDbContextScopeAsync(cancellationToken, async (executionScope, cancellationToken) =>
+		{
+			if (await showRepo.Any(cancellationToken))
+				throw new InvalidOperationException("To re-run the fast initial population, delete the database and restart the application.");
+		});
+
 		logger.LogInformation("First time populating all shows, persons, and appearances");
 		logger.LogInformation("Delete the database to be able to re-run this one-time process, as it merely exists to speed things up as compared to incremental updates");
 
