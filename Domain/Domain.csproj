@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>RtlTimo.InterviewDemo.Domain</AssemblyName>
+		<RootNamespace>RtlTimo.InterviewDemo.Domain</RootNamespace>
+		<NuGetAudit>True</NuGetAudit>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!-- IDE0290: Use primary constructor - domain objects tend to have complex ctor logic, and we want to be consistent even when ctors are simple -->
+		<NoWarn>IDE0290</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).UnitTests" />
+		<InternalsVisibleTo Include="RtlTimo.InterviewDemo.Application.IntegrationTests" />
+		<InternalsVisibleTo Include="RtlTimo.InterviewDemo.Application.UnitTests" />
+		<InternalsVisibleTo Include="RtlTimo.InterviewDemo.Testing.Common" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Architect.DomainModeling" />
+		<PackageReference Include="Architect.Identities" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="prometheus-net.AspNetCore" />
+		<PackageReference Include="Scrutor" />
+	</ItemGroup>
+
+</Project>
