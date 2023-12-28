@@ -65,7 +65,12 @@ public static class Program
 		app.UseHttpMetrics();
 
 		app.UseSwagger();
-		app.UseSwaggerUI();
+		app.UseSwaggerUI(swagger =>
+		{
+			// Expose at the root
+			swagger.RoutePrefix = "";
+			swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "InterviewDemo API");
+		});
 
 		app.UseApplicationControllers();
 

@@ -34,7 +34,6 @@ public sealed class PopulateAllAppearancesUseCase(
 			var knownPersonIds = new HashSet<PersonId>();
 
 			await using var showEnumerator = showRepo.Enumerate().WithCancellation(cancellationToken).GetAsyncEnumerator();
-
 			while (await showEnumerator.MoveNextAsync())
 			{
 				// Per batch of shows
